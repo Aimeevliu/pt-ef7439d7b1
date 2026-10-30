@@ -66,6 +66,9 @@ details ul{padding-left:1.2em;margin:8px 0 0;display:grid;gap:4px}
 footer{color:var(--sub);font-size:12.5px;line-height:1.7}
 @media (prefers-reduced-motion:reduce){.arrow{transition:none}}
 .m-only{display:none}
+.c-who{display:none}
+.who-main{font-weight:700;white-space:nowrap}
+td.c-case{white-space:nowrap}
 a.phone{text-decoration:none;border-bottom:1px dotted var(--sub)}
 /* 手機：表格改成一列一張小卡，點卡展開 */
 @media (max-width:620px){
@@ -86,10 +89,10 @@ a.phone{text-decoration:none;border-bottom:1px dotted var(--sub)}
   tr.row.new td:first-child{box-shadow:none}
   tr.row[aria-expanded="true"]{border-bottom-left-radius:0;border-bottom-right-radius:0}
   .c-case{grid-area:case;min-width:0}.c-grade{grid-area:grade}.c-arrow{grid-area:arrow}
-  .c-who{grid-area:who;color:var(--sub);font-size:14px}.ag{grid-area:ag}
+  .c-who{grid-area:who;color:var(--sub);font-size:14px;display:block!important}.ag{grid-area:ag}
   .c-exp{display:none!important}
   .m-only{display:inline}
-  .case{font-size:16px}
+  .who-main{font-size:16.5px}
   tr.detail{display:block}
   tr.detail[hidden]{display:none}
   tr.detail td{display:block;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:12px 14px}
@@ -117,7 +120,7 @@ a.phone{text-decoration:none;border-bottom:1px dotted var(--sub)}
   </div>
 
   <div class="tablewrap"><table>
-    <thead><tr><th>登錄案號</th><th>國籍・年齡</th><th class="c-exp">公告到期</th><th>原仲介</th><th>仲介評鑑</th><th aria-label="展開"></th></tr></thead>
+    <thead><tr><th>人選</th><th class="c-who"></th><th class="c-exp">公告到期</th><th>原仲介</th><th>仲介評鑑</th><th aria-label="展開"></th></tr></thead>
     <tbody id="out"></tbody></table></div>
 
   <details>
@@ -166,15 +169,15 @@ function grade(a){
 }
 function rows(r,i){
   return `<tr class="row${r.new?' new':''}" tabindex="0" aria-expanded="false" data-i="${i}">
-    <td class="c-case"><span class="case">${esc(r['案號'])}</span>${r.new?'<span class="tag">新</span>':''}</td>
-    <td class="c-who">${esc(r['國籍'])}・${esc(r['年齡'])}<span class="m-only"> 歲・公告到 ${esc(r['公告到期'])}</span></td>
+    <td class="c-case"><span class="who-main">${esc(r['國籍'])}・${esc(r['年齡'])} 歲</span>${r.new?'<span class="tag">新</span>':''}</td>
+    <td class="c-who">公告到 ${esc(r['公告到期'])}</td>
     <td class="c-exp" style="font-variant-numeric:tabular-nums">${esc(r['公告到期'])}</td>
     <td class="ag">${esc(short(r['仲介']))}<small>Google ${esc(r.ag.google)}</small></td>
     <td class="c-grade">${grade(r.ag)}</td><td class="c-arrow"><span class="arrow">▶</span></td></tr>
   <tr class="detail" hidden><td colspan="6"><div class="dgrid">
+    <div class="drow"><span>登錄案號 <b class="case">${esc(r['案號'])}</b></span><button class="copy" data-copy="${esc(r['案號'])}">複製案號</button></div>
     <div class="drow"><span>媒合限制到期 <b>${esc(r['媒合限制到期'])}</b></span><span>公告到期 <b>${esc(r['公告到期'])}</b></span><span>語言 <b>${esc(r['語言'])}</b></span><span>原工作 <b>${esc(r['原工作'])}</b></span></div>
-    <div class="drow"><span>${esc(r['仲介'])}</span><a class="phone" href="tel:${esc(r['電話'].replace(/[^0-9#]/g,''))}">${esc(r['電話'])}</a>
-      <button class="copy" data-copy="${esc(r['案號'])}">複製案號</button></div>
+    <div class="drow"><span>${esc(r['仲介'])}</span><a class="phone" href="tel:${esc(r['電話'].replace(/[^0-9#]/g,''))}">${esc(r['電話'])}</a></div>
     <div class="chips">${chips(r.ag)}</div></div></td></tr>`;
 }
 function render(){
