@@ -34,7 +34,7 @@ header .meta b{color:var(--ink);font-variant-numeric:tabular-nums}
 .filters button:focus-visible,.copy:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
 table{width:100%;border-collapse:collapse;font-size:15px}
-@media (max-width:540px){.c-exp{display:none}td,th{padding:10px 8px}}
+
 th{text-align:left;font-size:12.5px;letter-spacing:.06em;color:var(--sub);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
 td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
 tr.row{cursor:pointer}
@@ -65,6 +65,38 @@ details summary{font-weight:700;cursor:pointer}
 details ul{padding-left:1.2em;margin:8px 0 0;display:grid;gap:4px}
 footer{color:var(--sub);font-size:12.5px;line-height:1.7}
 @media (prefers-reduced-motion:reduce){.arrow{transition:none}}
+.m-only{display:none}
+a.phone{text-decoration:none;border-bottom:1px dotted var(--sub)}
+/* 手機：表格改成一列一張小卡，點卡展開 */
+@media (max-width:620px){
+  body{font-size:15.5px}
+  header h1{font-size:22px}
+  .how{font-size:14px}
+  .filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);padding-block:8px;margin-block:-8px;overflow-x:auto;flex-wrap:nowrap}
+  .filters button{white-space:nowrap;padding:8px 14px}
+  .tablewrap{background:transparent;border:0;border-radius:0;overflow:visible}
+  table,tbody{display:block}
+  thead{display:none}
+  tr.sec{display:block}
+  tr.sec td{display:block;background:transparent;padding:14px 2px 6px;border:0}
+  tr.row{display:grid;grid-template-columns:1fr auto auto;grid-template-areas:"case grade arrow" "who who who" "ag ag ag";
+    gap:4px 10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:8px}
+  tr.row td{display:block;padding:0;border:0;background:transparent!important}
+  tr.row.new{border-color:var(--gold);box-shadow:inset 4px 0 0 var(--gold)}
+  tr.row.new td:first-child{box-shadow:none}
+  tr.row[aria-expanded="true"]{border-bottom-left-radius:0;border-bottom-right-radius:0}
+  .c-case{grid-area:case;min-width:0}.c-grade{grid-area:grade}.c-arrow{grid-area:arrow}
+  .c-who{grid-area:who;color:var(--sub);font-size:14px}.ag{grid-area:ag}
+  .c-exp{display:none!important}
+  .m-only{display:inline}
+  .case{font-size:16px}
+  tr.detail{display:block}
+  tr.detail[hidden]{display:none}
+  tr.detail td{display:block;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:12px 14px}
+  .drow{gap:4px 14px}
+  .copy{padding:6px 12px}
+  a.phone{font-size:17px;padding:4px 0}
+}
 </style>
 </head><body>
 <div class="wrap">
@@ -134,14 +166,14 @@ function grade(a){
 }
 function rows(r,i){
   return `<tr class="row${r.new?' new':''}" tabindex="0" aria-expanded="false" data-i="${i}">
-    <td><span class="case">${esc(r['案號'])}</span>${r.new?'<span class="tag">新</span>':''}</td>
-    <td>${esc(r['國籍'])}・${esc(r['年齡'])}</td>
+    <td class="c-case"><span class="case">${esc(r['案號'])}</span>${r.new?'<span class="tag">新</span>':''}</td>
+    <td class="c-who">${esc(r['國籍'])}・${esc(r['年齡'])}<span class="m-only"> 歲・公告到 ${esc(r['公告到期'])}</span></td>
     <td class="c-exp" style="font-variant-numeric:tabular-nums">${esc(r['公告到期'])}</td>
     <td class="ag">${esc(short(r['仲介']))}<small>Google ${esc(r.ag.google)}</small></td>
-    <td>${grade(r.ag)}</td><td><span class="arrow">▶</span></td></tr>
+    <td class="c-grade">${grade(r.ag)}</td><td class="c-arrow"><span class="arrow">▶</span></td></tr>
   <tr class="detail" hidden><td colspan="6"><div class="dgrid">
     <div class="drow"><span>媒合限制到期 <b>${esc(r['媒合限制到期'])}</b></span><span>公告到期 <b>${esc(r['公告到期'])}</b></span><span>語言 <b>${esc(r['語言'])}</b></span><span>原工作 <b>${esc(r['原工作'])}</b></span></div>
-    <div class="drow"><span>${esc(r['仲介'])}</span><span class="phone">${esc(r['電話'])}</span>
+    <div class="drow"><span>${esc(r['仲介'])}</span><a class="phone" href="tel:${esc(r['電話'].replace(/[^0-9#]/g,''))}">${esc(r['電話'])}</a>
       <button class="copy" data-copy="${esc(r['案號'])}">複製案號</button></div>
     <div class="chips">${chips(r.ag)}</div></div></td></tr>`;
 }
