@@ -121,7 +121,7 @@ a.phone{text-decoration:none;border-bottom:1px dotted var(--sub)}
   </div>
 
   <div class="tablewrap"><table>
-    <thead><tr><th>人選</th><th class="c-who"></th><th class="c-exp">公告到期</th><th>原仲介</th><th>仲介評鑑</th><th aria-label="展開"></th></tr></thead>
+    <thead><tr><th>人選</th><th class="c-who"></th><th class="c-exp">媒合到期</th><th>原仲介</th><th>仲介評鑑</th><th aria-label="展開"></th></tr></thead>
     <tbody id="out"></tbody></table></div>
 
   <details>
@@ -173,8 +173,8 @@ function grade(a){
 function rows(r,i){
   return `<tr class="row${r.new?' new':''}" tabindex="0" aria-expanded="false" data-i="${i}">
     <td class="c-case"><span class="who-main">${esc(r['國籍'])}・${esc(r['年齡'])} 歲</span>${r.new?'<span class="tag">新</span>':''}</td>
-    <td class="c-who">公告到 ${esc(r['公告到期'])}</td>
-    <td class="c-exp" style="font-variant-numeric:tabular-nums">${esc(r['公告到期'])}</td>
+    <td class="c-who">媒合到 ${esc(r['媒合限制到期'])}</td>
+    <td class="c-exp" style="font-variant-numeric:tabular-nums">${esc(r['媒合限制到期'])}</td>
     <td class="ag">${esc(short(r['仲介']))}<small>Google ${esc(r.ag.google)}</small></td>
     <td class="c-grade">${grade(r.ag)}</td><td class="c-arrow"><span class="arrow">▶</span></td></tr>
   <tr class="detail" hidden><td colspan="6"><div class="dgrid">
